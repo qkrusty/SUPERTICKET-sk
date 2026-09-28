@@ -1,0 +1,153 @@
+{% from "_icons.html" import i, sprite %}
+{%- macro stlogo(label) -%}
+<span class="stlogo" role="img" aria-label="{{ label }}"><img class="stlogo__ring" src="{{ a('img/logo-st-ring.webp') }}" alt="" width="189" height="188"><span class="stlogo__word"><img src="{{ a('img/logo-st-word.webp') }}" alt="" width="642" height="60"></span></span>
+{%- endmacro -%}
+{%- macro head_tags() -%}
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+<meta name="theme-color" content="#0A0B11">
+{% if mode == 'deploy' %}<link rel="canonical" href="{{ site.domain }}{{ canonical }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Superticket">
+<meta property="og:locale" content="sk_SK">
+<meta property="og:title" content="{{ og_title or title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ site.domain }}{{ canonical }}">
+<meta property="og:image" content="{{ site.domain }}/{{ og_image }}">
+<meta name="twitter:card" content="summary_large_image">
+{% endif %}<link rel="icon" type="image/png" href="{{ a('img/favicon.png') }}">
+<link rel="apple-touch-icon" href="{{ a('img/apple-touch-icon.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="{{ a('assets/site.css') }}?v={{ ver }}">
+{% for img in preload %}<link rel="preload" as="image" href="{{ a(img) }}">
+{% endfor %}{% if jsonld %}<script type="application/ld+json">{{ jsonld|safe }}</script>
+{% endif %}{{ head_extra }}
+{%- endmacro -%}
+{%- macro body() -%}
+{{ sprite() }}
+<a class="skip" href="#main">Preskočiť na obsah</a>
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a class="hdr__logo" href="{{ u('home') }}">{{ stlogo('Superticket – úvod') }}</a>
+    <nav class="nav" aria-label="Hlavná navigácia">
+      <a href="{{ u('home') }}#podujatia"{% if page == 'home' %} aria-current="page"{% endif %}>Podujatia</a>
+      <a href="{{ u('minule-akcie') }}"{% if page == 'minule-akcie' %} aria-current="page"{% endif %}>Minulé akcie</a>
+      <a href="{{ u('caste-otazky') }}"{% if page == 'caste-otazky' %} aria-current="page"{% endif %}>Časté otázky</a>
+      <a href="{{ u('kontakt') }}"{% if page == 'kontakt' %} aria-current="page"{% endif %}>Kontakt</a>
+    </nav>
+    <a class="bzuco-widget-basket basket" href="{{ u('vstupenky') }}#/kosik" data-label="Košík" aria-label="Košík">{{ i('bag') }}<span class="bzuco-basket-label">Košík</span><span class="bzuco-basket-ico"></span><span class="bzuco-basket-price"></span></a>
+    <a class="btn btn--brand hdr__cta" href="{{ u('vstupenky') }}">{{ i('ticket') }}Vstupenky</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Otvoriť menu">{{ i('menu', 'ico-open') }}{{ i('close', 'ico-close') }}</button>
+  </div>
+  <div id="mnav" class="mnav" hidden>
+    <div class="wrap">
+      <ul>
+        <li><a href="{{ u('home') }}#podujatia">Podujatia {{ i('arrow') }}</a></li>
+        <li><a href="{{ u('vstupenky') }}">Vstupenky a košík {{ i('arrow') }}</a></li>
+        <li><a href="{{ u('minule-akcie') }}">Minulé akcie {{ i('arrow') }}</a></li>
+        <li><a href="{{ u('caste-otazky') }}">Časté otázky {{ i('arrow') }}</a></li>
+        <li><a href="{{ u('kontakt') }}">Kontakt {{ i('arrow') }}</a></li>
+      </ul>
+      <div class="mnav__ev">
+        {% for e in events %}<a href="{{ u(e.slug) }}">{{ e.short }}<small>{{ e.date }}</small></a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+{{ main }}
+</main>
+
+<section class="stats wrap{% if 'is-event' in body_class %} stats--compact{% endif %}" aria-labelledby="stats-title">
+  <div class="stats__box">
+    <span class="eyebrow">O nás</span>
+    <h2 class="stats__title" id="stats-title">Superticket v číslach</h2>
+    <ul class="stats__grid">
+      {% for s in stats %}
+      <li class="badge">
+        <span class="badge__ring">{{ i(s.icon) }}<span class="badge__num" data-count="{{ s.value }}">{{ '{:,}'.format(s.value).replace(',', ' ') }}{% if s.suffix %}<small>{{ s.suffix }}</small>{% endif %}</span></span>
+        <span class="badge__label">{{ s.label }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__grid">
+      <div>
+        <a class="ftr__logo" href="{{ u('home') }}">{{ stlogo('Superticket') }}</a>
+        <p class="ftr__claim">{{ site.claim }}</p>
+        <div class="social">
+          <a href="{{ site.facebook }}" target="_blank" rel="noopener" aria-label="Superticket na Facebooku">{{ i('fb', 'ico--fill') }}</a>
+          <a href="{{ site.instagram }}" target="_blank" rel="noopener" aria-label="Superticket na Instagrame">{{ i('ig') }}</a>
+        </div>
+      </div>
+      <div>
+        <h2>Podujatia</h2>
+        <ul>
+          {% for e in events %}<li><a href="{{ u(e.slug) }}">{{ e.short }}</a></li>
+          {% endfor %}<li><a href="{{ u('minule-akcie') }}">Minulé akcie</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Informácie</h2>
+        <ul>
+          <li><a href="{{ u('vstupenky') }}">Vstupenky a košík</a></li>
+          <li><a href="{{ u('caste-otazky') }}">Časté otázky</a></li>
+          <li><a href="{{ u('kontakt') }}">Kontakt</a></li>
+          <li><a href="{{ u('obchodne-podmienky') }}">Obchodné podmienky</a></li>
+          <li><a href="{{ u('ochrana-osobnych-udajov') }}">Ochrana osobných údajov</a></li>
+          <li><button class="linklike" type="button" data-cookie-settings>Nastavenia cookies</button></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Bezpečná platba</h2>
+        <div class="pay">
+          <span><img src="{{ a('img/pay-visa.png') }}" alt="Verified by Visa" width="67" height="30" loading="lazy"></span>
+          <span><img src="{{ a('img/pay-mastercard.png') }}" alt="Mastercard SecureCode" width="117" height="38" loading="lazy"></span>
+          <span><img src="{{ a('img/pay-gopay.png') }}" alt="GoPay" width="100" height="35" loading="lazy"></span>
+        </div>
+        <p class="pay__note">{{ i('shield') }}<span>Platby spracúva zabezpečená platobná brána GoPay. Vstupenky vám prídu e-mailom.</span></p>
+        <a class="ftr__fest" href="{{ site.bsf_web }}" target="_blank" rel="noopener"><img src="{{ a('img/logo-bsf.webp') }}" alt="" width="52" height="51" loading="lazy"><span><strong>bigsummerfest.sk</strong>Oficiálny web festivalu BIG SUMMER FEST</span></a>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© 2026 <strong>{{ contact.company }}</strong> · IČO {{ contact.ico }}</span>
+      <span>Oficiálne vstupenky kupujte iba na <strong>superticket.sk</strong></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  {{ i('check') }}<p>Vstupenky sú v košíku</p>
+  <a class="btn btn--dark" href="{{ u('vstupenky') }}#/kosik">Do košíka</a>
+</div>
+
+<div class="cookie" id="cookiebar" role="region" aria-label="Súhlas s cookies" hidden>
+  <p>Cookies pre košík a štatistiku. <a href="{{ u('ochrana-osobnych-udajov') }}#cookies">Viac</a></p>
+  <button class="cookie__no" type="button" data-consent="necessary">Len nutné</button>
+  <button class="btn btn--brand cookie__yes" type="button" data-consent="all">Prijať</button>
+</div>
+{{ scripts }}
+<script src="{{ a('assets/site.js') }}?v={{ ver }}" defer></script>
+{%- endmacro -%}
+{% if fragment %}{{ head_tags() }}
+{{ body() }}
+{% else %}<!doctype html>
+<html lang="sk"{% if mode == 'deploy' and site.gtm %} data-gtm="{{ site.gtm }}"{% endif %}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+{{ head_tags() }}
+</head>
+<body class="{{ body_class }}">
+{{ body() }}
+</body>
+</html>
+{% endif %}

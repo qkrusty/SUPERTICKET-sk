@@ -1,0 +1,8 @@
+{% from "_icons.html" import i %}
+{% macro countdown(e, big=False) -%}
+{% set w = e.wave %}
+<div class="cd{% if big %} cd--lg{% endif %}" data-countdown="{{ w.ends if w else e.countdown.to }}">
+  <span class="cd__l">{{ i('clock') }}{% if w %}{{ w.end_label }} o{% else %}{{ e.countdown.label }}{% endif %}</span>
+  <span class="cd__v"><span><b data-u="d">–</b><i>dní</i></span><span><b data-u="h">–</b><i>hod</i></span><span><b data-u="m">–</b><i>min</i></span><span><b data-u="s">–</b><i>s</i></span></span>
+</div>
+{%- endmacro %}

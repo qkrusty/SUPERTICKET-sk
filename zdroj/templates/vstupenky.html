@@ -1,0 +1,32 @@
+{% from "_icons.html" import i %}{% from "_phead.html" import phead with context %}
+{{ phead('Vstupenky', 'Vyberte podujatie, pridajte vstupenky do košíka a zaplaťte online. Vstupenky s QR kódom vám prídu e-mailom.') }}
+<section class="wrap section">
+  <div class="paper">
+    {% if mode == 'deploy' %}
+    <div class="bz-slot" data-bz-slot>
+      <div class="bz-loading"><span class="spinner"></span>Načítavam predaj vstupeniek…</div>
+      <div class="bzuco"><script src="{{ site.bzuco_embed }}"></script></div>
+      <div class="bz-fallback">
+        <h3>Predaj sa nenačítal</h3>
+        <p>Skúste obnoviť stránku alebo si vyberte podujatie nižšie. Ak problém pretrváva, napíšte nám na <a href="mailto:{{ contact.support }}">{{ contact.support }}</a>.</p>
+      </div>
+    </div>
+    {% else %}
+    <div class="bz-slot">
+      <div class="bz-fallback bz-fallback--on">
+        <h3>Tu bude košík a zoznam Bzuco</h3>
+        <p>Na superticket.sk sa na tejto stránke načíta celý predaj Bzuco – zoznam podujatí, košík aj platba. Sem vedú aj tlačidlá „Košík“ a návrat po zaplatení.</p>
+      </div>
+    </div>
+    {% endif %}
+    <div class="allticks">
+      {% for o in events %}
+      <a class="mini ev-{{ o.key }}" href="{{ u(o.slug) }}">
+        <img class="mini__img" src="{{ a(o.tile_img) }}" alt="" loading="lazy" width="88" height="88" style="object-position:{{ o.tile_pos }}">
+        <span class="mini__b"><strong>{{ o.name }}</strong><span class="mini__d">{{ o.date }}</span><span class="mini__v">{{ o.venue }}, {{ o.city }}</span></span>
+        <span class="mini__go" aria-hidden="true">{{ i('arrow') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>

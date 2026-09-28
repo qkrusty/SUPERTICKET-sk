@@ -1,0 +1,40 @@
+{% from "_icons.html" import i %}{% from "_phead.html" import phead with context %}
+{{ phead(title, lead) }}
+<section class="wrap section">
+  <div class="legal">
+    <details class="toc">
+      <summary>Obsah {{ i('chev') }}</summary>
+      <ol>
+        {% for a_id, a_t, _ in arts %}<li><a href="#{{ a_id }}">{{ a_t }}</a></li>{% endfor %}
+        {% if cookies %}<li><a href="#cookies">Súbory cookies</a></li>{% endif %}
+      </ol>
+    </details>
+    <div class="paper">
+      <div class="doc">
+        <div class="company">
+          <strong>{{ contact.company }}</strong>
+          <span>so sídlom {{ contact.street }}, {{ contact.city }}</span>
+          <span>IČO: {{ contact.ico }}</span>
+          <span>zapísaná v obchodnom registri: {{ contact.register }}</span>
+        </div>
+        <p class="doc__intro">{{ intro|safe }}</p>
+        {% for a_id, a_t, a_html in arts %}
+        <section class="art" id="{{ a_id }}">
+          <span class="art__n">{{ label }} {{ loop.index }}</span>
+          <h2>{{ a_t }}</h2>
+          {{ a_html|safe }}
+        </section>
+        {% endfor %}
+        <p class="sign">{{ sign }}</p>
+        {% if cookies %}
+        <section class="art" id="cookies">
+          <span class="art__n">Cookies</span>
+          <h2>Súbory cookies</h2>
+          {{ cookies|safe }}
+          <p style="margin-top:18px"><button class="btn btn--dark" type="button" data-cookie-settings>Zmeniť súhlas s cookies</button></p>
+        </section>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

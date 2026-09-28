@@ -1,0 +1,72 @@
+{% from "_icons.html" import i %}{% from "_phead.html" import phead with context %}
+{{ phead('Kontakt', 'Pomôžeme vám s objednávkou, platbou aj vstupenkami. Najrýchlejšie nás zastihnete e-mailom.') }}
+<section class="wrap section">
+  <div class="contact">
+    <div class="support">
+      <span class="support__label">{{ i('mail') }}Zákaznícka podpora</span>
+      <h2>Napíšte nám e-mail</h2>
+      <p class="support__for">Reklamácie, problémy s platbou, nedoručené vstupenky a technické problémy s platformou.</p>
+      <div class="mailbox">
+        <span class="mailbox__addr" id="support-mail">{{ contact.support }}</span>
+        <a class="btn btn--brand" href="mailto:{{ contact.support }}">{{ i('mail') }}Napísať e-mail</a>
+        <button class="btn btn--ghost" type="button" data-copy="{{ contact.support }}" aria-controls="support-mail">{{ i('copy') }}<span class="lbl">Kopírovať</span></button>
+      </div>
+      <ul class="support__tips">
+        <li>{{ i('clock') }}<span>Odpovedáme v pracovné dni {{ contact.support_hours }}.</span></li>
+        <li>{{ i('info') }}<span>Do správy uveďte meno a e-mail objednávateľa, prípadne číslo objednávky.</span></li>
+        <li>{{ i('check') }}<span>Neprišli vstupenky? Skontrolujte aj priečinok s nevyžiadanou poštou (spam).</span></li>
+      </ul>
+    </div>
+    <div class="ccards">
+      <div class="ccard">
+        <p class="ccard__t">{{ i('phone') }}Telefón</p>
+        <a class="ccard__v" href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a>
+        <p class="ccard__d">Volajte {{ contact.phone_hours }}. Pri reklamáciách uprednostňujeme e-mail.</p>
+      </div>
+      <div class="ccard">
+        <p class="ccard__t">{{ i('calendar') }}Info o podujatiach</p>
+        <a class="ccard__v" href="mailto:{{ contact.info }}">{{ contact.info }}</a>
+        <p class="ccard__d">Aktuálne a pripravované podujatia.</p>
+      </div>
+      <div class="ccard">
+        <p class="ccard__t">{{ i('star') }}Spolupráce</p>
+        <a class="ccard__v" href="mailto:{{ contact.marketing }}">{{ contact.marketing }}</a>
+        <p class="ccard__d">Marketingové spolupráce a ponuky.</p>
+      </div>
+      <div class="ccard">
+        <p class="ccard__t">{{ i('building') }}Prevádzkovateľ</p>
+        <address><strong>{{ contact.company }}</strong><br>{{ contact.street }}<br>{{ contact.city }}<br>IČO {{ contact.ico }}</address>
+      </div>
+    </div>
+  </div>
+  <div class="socials">
+    <span class="eyebrow">Sledujte nás</span>
+    <h2 class="h-sec">Sociálne siete</h2>
+    <div class="socials__grid">
+      {% for so in social %}
+      <a class="soc soc--{{ so.icon }}" href="{{ so.url }}" target="_blank" rel="noopener">
+        <span class="soc__ic">{{ i(so.icon, 'ico--fill' if so.icon == 'fb' else '') }}</span>
+        <span class="soc__b"><strong>{{ so.name }}</strong><span class="soc__h">{{ so.handle }}</span><span class="soc__t">{{ so.text }}</span></span>
+        <span class="soc__go">Sledovať{{ i('arrow') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="webs">
+    <span class="eyebrow">Weby našich podujatí</span>
+    <h2 class="h-sec">Viac informácií</h2>
+    <div class="webs__grid">
+      {% for w in webs %}
+      <a class="web ev-{{ w.key }}" href="{{ w.url }}" target="_blank" rel="noopener">
+        <span class="web__logo"><img src="{{ a(w.logo) }}" alt="{{ w.name }}" loading="lazy"></span>
+        <span class="web__b"><span><strong>{{ w.domain }}</strong><span>{{ w.name }}</span></span><span class="web__go">{{ i('ext') }}</span></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="aside-card" style="margin-top:34px">
+    <h2>Časté otázky</h2>
+    <p>Odpovede na otázky o platbe, doručení vstupeniek, výmene či zrušení podujatia nájdete na jednom mieste.</p>
+    <a class="btn btn--ghost" href="{{ u('caste-otazky') }}">Prejsť na časté otázky{{ i('arrow') }}</a>
+  </div>
+</section>

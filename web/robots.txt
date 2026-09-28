@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.superticket.sk/sitemap.xml

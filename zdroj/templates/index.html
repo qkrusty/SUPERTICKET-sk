@@ -1,0 +1,124 @@
+{% from "_icons.html" import i %}{% from "_cd.html" import countdown %}
+<section class="sel wrap" id="podujatia" aria-labelledby="sel-title">
+  <div class="sel__head">
+    <div>
+      <span class="eyebrow">Aktuálne podujatia</span>
+      <h1 class="sel__title" id="sel-title">Vstupenky na naše podujatia</h1>
+    </div>
+    <ul class="trust">
+      <li>{{ i('check') }}Bezpečná platba kartou</li>
+      <li>{{ i('check') }}Vstupenky automaticky e-mailom</li>
+      <li>{{ i('check') }}Bez registrácie</li>
+    </ul>
+  </div>
+  <div class="tiles">
+    {% for e in events %}
+    <article class="tile ev-{{ e.key }}" data-reveal>
+      <a class="tile__media" href="{{ u(e.slug) }}" tabindex="-1" aria-hidden="true">
+        <img class="tile__poster" src="{{ a(e.poster) }}" alt="" width="1000" height="1000"{% if loop.index > 2 %} loading="lazy"{% else %} fetchpriority="high"{% endif %}>
+        <img class="tile__photo" src="{{ a(e.tile_img) }}" alt="" width="1400" height="933" loading="lazy" style="object-position:{{ e.tile_pos }}">
+        <img class="tile__logo" src="{{ a(e.logo) }}" alt="" width="{{ e.logo_w }}" height="{{ e.logo_h }}" loading="lazy">
+      </a>
+      <span class="tile__kind">{{ e.kind }}</span>
+      <div class="tile__info">
+        <h2 class="sr-only">{{ e.name }}</h2>
+        <p class="tile__date">{{ e.tile_date }}</p>
+        <p class="tile__venue">{{ i('pin') }}<span>{{ e.venue }}<small>{{ e.city }}</small></span></p>
+        <a class="btn tile__cta" href="{{ u(e.slug) }}" aria-label="Kúpiť vstupenky – {{ e.name }}">{{ i('ticket') }}<span class="hide-xs">Kúpiť vstupenky</span><span class="show-xs">Vstupenky</span></a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="news wrap" aria-labelledby="news-title">
+  <div class="news__grid">
+    <div>
+      <span class="eyebrow">Oznamy</span>
+      <h2 class="h-sec" id="news-title">Novinky a zmeny</h2>
+      <p class="news__lead">Nové podujatia, odhalené mená a dôležité zmeny na jednom mieste.</p>
+    </div>
+    <ul class="news__list">
+      {% for n in news %}{% set e = ev_by_key[n.event] %}{% set d = n.date.replace(' ', '').split('.') %}
+      <li>
+        <a class="news__link" href="{{ u(e.slug) }}">
+          <span class="news__date"{% if n.date %} aria-label="{{ n.date }}"{% endif %}>{% if n.date %}<b>{{ d[0] }}</b><span>{{ months[d[1]|int] }}</span><small>{{ d[2] }}</small>{% else %}<b>•</b>{% endif %}</span>
+          <span class="news__b">
+            <span class="news__top"><span class="tag tag--{{ n.tag }}">{{ tag_labels[n.tag] }}</span><span class="news__h">{{ n.title }}</span></span>
+            <span class="news__t">{{ n.text }}</span>
+          </span>
+          <span class="news__go">{{ i('arrow') }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="wrap evs" aria-labelledby="evs-title">
+  <div>
+    <span class="eyebrow">Podrobnosti</span>
+    <h2 class="h-sec" id="evs-title">Čo vás čaká</h2>
+  </div>
+  {% for e in events %}
+  <article class="ev ev-{{ e.key }}{% if loop.index is even %} ev--flip{% endif %}" id="{{ e.slug }}-info" data-spot data-reveal>
+    <a class="ev__media" href="{{ u(e.slug) }}" tabindex="-1" aria-hidden="true">
+      <img class="ev__blur" src="{{ a(e.poster) }}" alt="" width="1000" height="1000" loading="lazy">
+      <img class="ev__poster" src="{{ a(e.poster) }}" alt="" width="1000" height="1000" loading="lazy">
+      <span class="ev__zoom"><img class="ev__photo" src="{{ a(e.hero_img) }}" alt="" width="1920" height="1280" loading="lazy" style="object-position:{{ e.hero_pos }}"></span>
+      <span class="ev__badge">{{ e.kind }}</span>
+      <img class="ev__logo" src="{{ a(e.logo) }}" alt="" width="{{ e.logo_w }}" height="{{ e.logo_h }}" loading="lazy">
+    </a>
+    <div class="ev__body">
+      <div>
+        <p class="ev__kicker">{{ e.kicker }}</p>
+        <h3 class="ev__name">{{ e.name }}</h3>
+      </div>
+      <div class="meta">
+        <div class="meta__row"><span class="meta__ic">{{ i('calendar') }}</span><div><span class="meta__main">{{ e.date }}</span><span class="meta__sub">{{ e.date_long }}{% if e.card_time %} · {{ e.card_time }}{% endif %}</span></div></div>
+        <div class="meta__row"><span class="meta__ic">{{ i('pin') }}</span><div><span class="meta__main">{{ e.venue }}</span><span class="meta__sub">{{ e.city }}</span></div></div>
+      </div>
+      <p class="ev__text">{{ e.summary }}</p>
+      {% if e.chips %}
+      <div>
+        <p class="chips__t">{{ e.chips_title }}</p>
+        <ul class="chips">
+          {% for c in e.chips[:6] %}<li class="chip">{{ c }}</li>{% endfor %}
+          {% if e.chips|length > 6 %}<li class="chip chip--more">+ {{ e.chips|length - 6 }} ďalších</li>{% elif e.chips_more %}<li class="chip chip--more">+ {{ e.chips_more }}</li>{% endif %}
+        </ul>
+      </div>
+      {% endif %}
+      {{ countdown(e) }}
+      <div class="stub">
+        <div class="stub__l">
+          <span class="stub__label">{{ e.stub_label }}</span>
+          <span class="stub__value">{{ e.stub_value }}</span>
+          {% if e.stub_note %}<span class="stub__note">{{ e.stub_note }}</span>{% endif %}
+        </div>
+        <div class="stub__r"><a class="btn btn--lg" href="{{ u(e.slug) }}" aria-label="Kúpiť vstupenky – {{ e.name }}">{{ i('ticket') }}Kúpiť vstupenky</a></div>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="refs" aria-labelledby="refs-title">
+  <div class="wrap refs__head">
+    <div>
+      <span class="eyebrow">Referencie</span>
+      <h2 class="h-sec" id="refs-title">Akcie, ktoré sme priniesli</h2>
+    </div>
+    <a class="btn btn--ghost" href="{{ u('minule-akcie') }}">Minulé akcie{{ i('arrow') }}</a>
+  </div>
+  <div class="marquee" aria-label="Logá podujatí">
+    {% for row in [refs, refs[5:] + refs[:5]] %}{% set rowi = loop.index %}
+    <div class="marquee__row{% if loop.index == 2 %} marquee__row--rev{% endif %}">
+      <ul class="marquee__track">
+        {% for rep in range(2) %}{% for r in row %}
+        <li class="rlogo{% if r.dark %} rlogo--dark{% endif %}"{% if rep == 1 or rowi == 2 %} aria-hidden="true"{% endif %}><img src="{{ a('img/ref/' ~ r.slug ~ '.webp') }}" alt="{% if rep == 0 and rowi == 1 %}{{ r.name }}{% endif %}" title="{{ r.name }}" loading="lazy"></li>
+        {% endfor %}{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
