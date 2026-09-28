@@ -1,9 +1,0 @@
-{% macro phead(title, lead='', crumb='') -%}
-<section class="phead">
-  <div class="wrap">
-    <nav class="crumbs" aria-label="Omrvinky"><a href="{{ u('home') }}">Úvod</a><span aria-hidden="true">/</span><span>{{ crumb or title }}</span></nav>
-    <h1>{{ title }}</h1>
-    {% if lead %}<p class="phead__lead">{{ lead }}</p>{% endif %}
-  </div>
-</section>
-{%- endmacro %}
